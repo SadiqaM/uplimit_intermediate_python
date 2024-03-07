@@ -63,17 +63,18 @@ def get_sales_information(file_path: str) -> Dict:
 # batches the files based on the number of processes
 def batch_files(file_paths: List[str], n_processes: int) -> List[set]:
     if n_processes > len(file_paths):
-        return #### [YOUR CODE HERE] ####
+        return [] #### [YOUR CODE HERE] ####
 
-    n_per_batch = #### [YOUR CODE HERE] ####
+    n_per_batch = len(file_paths) // n_processes #### [YOUR CODE HERE] ####
 
     first_set_len = n_processes * n_per_batch
     first_set = file_paths[0:first_set_len]
-    second_set = #### [YOUR CODE HERE] ####
+    second_set = file_paths[first_set_len:] #### [YOUR CODE HERE] ####
 
     batches = [set(file_paths[i:i + n_per_batch]) for i in range(0, len(first_set), n_per_batch)]
     for ind, each_file in enumerate(second_set):
         #### [YOUR CODE HERE] ####
+        batches[ind].add(each_file)
 
     return batches
 
@@ -103,7 +104,7 @@ def main() -> List[Dict]:
     Use the `run` method to fetch revenue data for a given batch of files
 
     Use multiprocessing module to process batches of data in parallel
-    Check `multiprocessing.Pool` and `pool.starmap` methods to help you wit the task
+    Check `multiprocessing.Pool` and `pool.starmap` methods to help you with the task
 
     At the end check the overall time taken in this code vs the time taken in W1 code
 
@@ -162,23 +163,36 @@ def main() -> List[Dict]:
     file_paths = [os.path.join(data_folder_path, file_name) for file_name in files]
 
     batches = batch_files(file_paths=file_paths, n_processes=n_processes)
+    pprint([(i, batch) for batch, i in enumerate(batches)])
 
     ######################################## YOUR CODE HERE ##################################################
     with multiprocessing.Pool(processes=n_processes) as pool:
-        
+        revenue_data = pool.starmap(run, [(i, batch) for batch, i in enumerate(batches)])
+
+        pool.close()
+        pool.join()
+    pprint(revenue_data)   
     ######################################## YOUR CODE HERE ##################################################
 
     en = time.time()
     print("Overall time taken : {}".format(en-st))
 
     ######################################## YOUR CODE HERE ##################################################
-    for yearly_data in revenue_data:
+    for data in revenue_data:
+        for yearly_data in data:
+            print("output_save_folder ======", yearly_data)
+            print("yearly_data['file_name'] ==== ", yearly_data["file_name"])
+            with open(os.path.join(output_save_folder, f'{yearly_data["file_name"]}.json'), 'w') as f:
+                f.write(json.dumps(yearly_data))
+
+            plot_sales_data(yearly_revenue=yearly_data['revenue_per_region'], year=yearly_data["file_name"],
+                        plot_save_path=os.path.join(output_save_folder, f'{yearly_data["file_name"]}.png'))
         
 
     ######################################## YOUR CODE HERE ##################################################
         
     # should return revenue data
-    return #### [YOUR CODE HERE] ####
+    return revenue_data #### [YOUR CODE HERE] ####
 
 
 if __name__ == '__main__':
