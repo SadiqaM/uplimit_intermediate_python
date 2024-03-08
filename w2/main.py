@@ -171,21 +171,22 @@ def main() -> List[Dict]:
 
         pool.close()
         pool.join()
-    pprint(revenue_data)   
+    # pprint(revenue_data) 
+    revenue_data = flatten(revenue_data)  
     ######################################## YOUR CODE HERE ##################################################
 
     en = time.time()
     print("Overall time taken : {}".format(en-st))
 
     ######################################## YOUR CODE HERE ##################################################
-    for data in revenue_data:
-        for yearly_data in data:
-            print("output_save_folder ======", yearly_data)
-            print("yearly_data['file_name'] ==== ", yearly_data["file_name"])
-            with open(os.path.join(output_save_folder, f'{yearly_data["file_name"]}.json'), 'w') as f:
-                f.write(json.dumps(yearly_data))
+    for yearly_data in revenue_data:
+        #for yearly_data in data:
+        print("output_save_folder ======", yearly_data)
+        print("yearly_data['file_name'] ==== ", yearly_data["file_name"])
+        with open(os.path.join(output_save_folder, f'{yearly_data["file_name"]}.json'), 'w') as f:
+            f.write(json.dumps(yearly_data))
 
-            plot_sales_data(yearly_revenue=yearly_data['revenue_per_region'], year=yearly_data["file_name"],
+        plot_sales_data(yearly_revenue=yearly_data['revenue_per_region'], year=yearly_data["file_name"],
                         plot_save_path=os.path.join(output_save_folder, f'{yearly_data["file_name"]}.png'))
         
 
