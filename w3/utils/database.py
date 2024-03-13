@@ -45,10 +45,10 @@ class DB:
         Read more about datatypes in Sqlite here -> https://www.sqlite.org/datatype3.html
         """
     ######################################## YOUR CODE HERE ##################################################
-    cursor = self._connection.cursor()
-    cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self._table_name}
-                    (process_id TEXT NOT NULL, file_name TEXT NULL, description TEXT NULL, start_time TEXT NOT NULL, end_time TEXT NULL, percentage REAL NULL)''')
-    self._connection.commit()
+        cursor = self._connection.cursor()
+        cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self._table_name}
+                    (process_id TEXT NOT NULL, file_name TEXT NULL,file_path TEXT NULL, description TEXT NULL, start_time TEXT NOT NULL, end_time TEXT NULL, percentage REAL NULL)''')
+        self._connection.commit()
     ######################################## YOUR CODE HERE ##################################################
 
     def insert(self, process_id, start_time, file_name=None, file_path=None,
@@ -65,12 +65,12 @@ class DB:
         :param percentage: Percentage of process completed
         :return: None
         """
-    ######################################## YOUR CODE HERE ##################################################
-    cursor = self._connection.cursor()
-    #"INSERT INTO users (name, email) VALUES (?, ?)", ("Alice", "alice@example.com"))
-    cursor.execute(f"INSERT INTO {self._table_name} (process_id, start_time, file_name, file_path, description, end_time, percentage) VALUES (?, ?, ?, ?, ?, ?, ?)", 
-                    ('{process_id}', '{start_time}', '{file_name}', '{file_path}', '{description}', '{end_time}', '{percentage}')))
-    self._connection.commit()
+        ######################################## YOUR CODE HERE ##################################################
+        cursor = self._connection.cursor()
+
+        cursor.execute(f"INSERT INTO {self._table_name} (process_id, start_time, file_name, file_path, description, end_time, percentage) VALUES (?, ?, ?, ?, ?, ?, ?)", 
+                    ('{process_id}', '{start_time}', '{file_name}', '{file_path}', '{description}', '{end_time}', '{percentage}'))
+        self._connection.commit()
     ######################################## YOUR CODE HERE ##################################################
 
     def read_all(self) -> List[Dict]:
