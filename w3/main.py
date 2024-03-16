@@ -88,7 +88,7 @@ class DP(DataProcessor):
 
         for row_num, row in enumerate(tqdm(data_reader_gen)):
             if isinstance(self._n_rows, int) and isinstance(row_num, int) and row_num % 10000 == 0:
-                self._db.update_percentage(process_id=process_id, percentage=100 * row_num/self._n_rows)
+                self._db.update_percentage(process_id=process_id, percentage=float(100 * row_num/self._n_rows, 2))
 
             for column_name in column_names:
                 stats[column_name].update_stats(val=row[column_name])
@@ -98,7 +98,7 @@ class DP(DataProcessor):
             pprint(column_name)
             pprint(value.get_stats())
 
-        self._db.update_percentage(process_id=process_id, percentage=100)
+        self._db.update_percentage(process_id=process_id, percentage=100.00)
         self._db.update_end_time(process_id=process_id, end_time=datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'))
 
 
@@ -146,13 +146,13 @@ def revenue_per_region(dp: DP) -> Dict:
 
     for n_row, row in enumerate(tqdm(data_reader_gen)):
         if isinstance(dp.get_n_rows(), int) and isinstance(n_row, int) and n_row % 10000 == 0:
-            dp.get_db().update_percentage(process_id=process_id, percentage=100 * n_row / dp.get_n_rows())
+            dp.get_db().update_percentage(process_id=process_id, percentage=float(100 * n_row / dp.get_n_rows(),2))
 
         if row[constants.OutDataColNames.COUNTRY] not in aggregate:
             aggregate[row[constants.OutDataColNames.COUNTRY]] = 0
         aggregate[row[constants.OutDataColNames.COUNTRY]] += dp.to_float(row[constants.OutDataColNames.TOTAL_PRICE])
 
-    dp.get_db().update_percentage(process_id=process_id, percentage=100)
+    dp.get_db().update_percentage(process_id=process_id, percentage=100.00)
     dp.get_db().update_end_time(process_id=process_id, end_time=datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'))
 
     return aggregate

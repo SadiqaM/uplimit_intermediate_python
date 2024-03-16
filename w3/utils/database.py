@@ -23,7 +23,7 @@ class DB:
         if isinstance(start_time, str) and isinstance(end_time, str):
             start_time = datetime.strptime(start_time, datetime_fmt)
             end_time = datetime.strptime(end_time, datetime_fmt)
-
+            print(start_time , "      start_time")
             return (end_time - start_time).total_seconds()
 
         return 0
@@ -47,7 +47,7 @@ class DB:
     ######################################## YOUR CODE HERE ##################################################
         cursor = self._connection.cursor()
         cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self._table_name}
-                    (process_id TEXT NOT NULL, file_name TEXT NULL,file_path TEXT NULL, description TEXT NULL, start_time TEXT NOT NULL, end_time TEXT NULL, percentage REAL NULL)''')
+                    (process_id TEXT NOT NULL, file_name TEXT NULL, file_path TEXT NULL, description TEXT NULL, start_time TEXT NOT NULL, end_time TEXT NULL, percentage REAL NULL)''')
         self._connection.commit()
     ######################################## YOUR CODE HERE ##################################################
 
@@ -67,9 +67,8 @@ class DB:
         """
         ######################################## YOUR CODE HERE ##################################################
         cursor = self._connection.cursor()
-
         cursor.execute(f"INSERT INTO {self._table_name} (process_id, start_time, file_name, file_path, description, end_time, percentage) VALUES (?, ?, ?, ?, ?, ?, ?)", 
-                    ('{process_id}', '{start_time}', '{file_name}', '{file_path}', '{description}', '{end_time}', '{percentage}'))
+                    (process_id, start_time, file_name, file_path, description, end_time, percentage))
         self._connection.commit()
     ######################################## YOUR CODE HERE ##################################################
 

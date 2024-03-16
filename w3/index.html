@@ -41,7 +41,7 @@
             var url = new URL(urlString);
 
             // Make a websocket connection
-            var ws = new WebSocket(`ws://localhost:8000/ws`);
+            var ws = new WebSocket(`wss://shiny-space-succotash-549j7g5pp56cp797-8000.app.github.dev/ws`);
 
             // On receiving a message, append it to the unordered list `messages`
             function processMessage(event) {
@@ -63,7 +63,7 @@
             function addRow(row){
                 $('#process-table').DataTable().row.add([row.process_id, row.file_name, row.file_path,
                                                          row.description, row.start_time, row.end_time,
-                                                         row.time_taken, (row.percentage).toFixed(2)]).draw(false);
+                                                         row.time_taken, (row.percentage)]).draw(false);
             }
         </script>
     </body>
